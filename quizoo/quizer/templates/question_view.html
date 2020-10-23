@@ -2,6 +2,7 @@
 <head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <style>
 .question-text{
     font-size:20px;
@@ -42,7 +43,7 @@
 <br>
 <div id="all_options">
 {% for x in options%}
-<div>
+<div class="option">
 <h3 class='badge badge-warning option-text'>{{x}}</h3>
 <input type="checkbox" class="check_box"/>
 </div>
@@ -62,6 +63,22 @@ if(mode=="True")
     //Turn off right click
     document.addEventListener('contextmenu', event => event.preventDefault());
 
+window.onblur = function() {
+    console.log("You are caught doing tab changes quiz epired");
+    $.ajax({
+    type:'POST',
+    url:"",
+    data:{
+        csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+        "cheating":true
+    },
+    success:function(res){
+    location.reload();
+        }
+    });
+
+
+};
 }
 var countDownDate = "{{end_time}}"*1000//To get international standard time
   console.log(countDownDate)
@@ -112,6 +129,7 @@ $.ajax({
         for(let i=0;i<res['options'].length;i++)
         {
             let d=document.createElement("div");
+            d.className='option';
             let opt=document.createElement("h3");
             opt.innerText=res['options'][i];
             opt.className="badge badge-warning option-text";
@@ -125,7 +143,7 @@ $.ajax({
         }
     },
     failure:function(res){
-        alert("Something went wrong try again")
+        Swal.fire('Something went wrong try again')
     }
 })
 console.log(li);

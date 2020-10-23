@@ -2,6 +2,7 @@
       <head>
           <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
 body {
   background-color: #F2F2F2;
@@ -65,7 +66,7 @@ table{
     left:0;
 }
 #saving{
-    position:absolute;
+    float:right;
     padding:20px;
     right:70px;
 }
@@ -75,12 +76,14 @@ table{
 @media only screen and (max-width: 600px) {
     .savings{
         display: none;
-/*        padding-bottom: 5%;*/
          }
      .table-striped table-hover
     {
-        margin-top: 10%;
+        margin-top: 5%;
     }
+        }
+        #instructions{
+          height:200px
         }
     
     </style>
@@ -88,7 +91,9 @@ table{
       <body>
     <h3 style="align-content: center;display: inline-block;text-decoration: underline;">Quiz Settings</h3>
   <div id="saving" class="savings"><button onclick="update()" class="btn btn-success">Save</button></div>
-  <table class="table table-striped table-hover" style="margin-top: 10%;">
+
+  <textarea class="form-control" placeholder="Instructions" id="instructions">{{quiz.quiz_instructions}}</textarea>
+  <table class="table table-hover" style="margin-top: 5%;">
     <thead>
       <tr>
         <th>Setting</th>
@@ -105,7 +110,7 @@ table{
         </label>
         </td>
       </tr>
-      <tr>
+      <tr style="display:none">
         <td>One question per page</td>
         <td>
         <label class="switch">
@@ -114,7 +119,7 @@ table{
         </label>
         </td>
       </tr>
-      <tr>
+      <tr style="display:none">
         <td>Resume Later</td>
         <td>
         <label class="switch">
@@ -150,7 +155,7 @@ table{
         </label>
         </td>
       </tr>
-      <tr>
+      <tr style="display:none">
         <td>Reveal Correct Answers after test</td>
         <td>
         <label class="switch">
@@ -159,7 +164,7 @@ table{
         </label>
         </td>
       </tr>
-    <tr>
+    <tr style="display:none">
         <td>Can be viewed after it is over</td>
         <td>
         <label class="switch">
@@ -177,7 +182,7 @@ table{
         </label>
         </td>
       </tr>
-        <tr>
+        <tr style="display:none">
         <td>Switch On Camera before test</td>
         <td>
         <label class="switch">
@@ -225,7 +230,7 @@ for(let i=0;i<l.length;i++)
 {
     l1.push(li[i].getElementsByTagName("label")[0].getElementsByTagName("input")[0].checked);
 }
-
+l1.push(document.getElementById("instructions").value)//Instructions of quiz
 $.ajax({
     type:"POST",
     url:"",
@@ -238,7 +243,9 @@ $.ajax({
     success:function(res)
     {
         if(res==200)
-        console.log("Settings Updated")
+        Swal.fire("Settings saved");
+        else
+        Swal.fire("Inavlid Settings");
     }
 }) 
 //Grab Values of whole settings and update them

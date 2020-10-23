@@ -12,11 +12,36 @@ input{
     width:300px;
     height:60px
 }
+#style{
+  width: 90%;
+    max-width: 1240px;
+    margin: 0 auto;
+      margin-top:10%;
+      text-align:left
+}
+#style h2{
+  text-transform: uppercase;
+    text-align: left;
+    margin: 10px 0 10px 22px;
+    color: #2ec866;
+    font-weight:bold;
+    line-height: 1.333333333333333em;
+
+}
+#style pre{
+  font-size: 1em;
+    line-height: 1.5em;
+}
 </style>
 </head>
 <body>
 <p id="demo"></p>
 <input class="btn btn-dark" type="button"  id="start" value="Start-Quiz"/>
+<div id="style">
+<h2>Instructions</h2>
+<hr></hr>
+<pre>{{instructions}}</pre>
+</div>
 </body>
 </html>
 <script>
@@ -31,8 +56,7 @@ $('#start').click(()=>{
     success:function(res)
     {
        let v1="{{quiz.strict_mode}}";
-       console.log(res);
-       
+       console.log(v1)
         if(res==200 && v1=="True")
         {
           var params = [
@@ -41,12 +65,12 @@ $('#start').click(()=>{
               'fullscreen=yes' // only works in IE, but here for completeness
           ].join(',');
 
-          var popup = window.open('/quiz/start/{{quiz.id}}', 'popup_window', params); 
+          var popup = window.open('/quiz/start/{{quiz.id}}/', 'popup_window', params); 
           popup.moveTo(0,0);
         }
         else if(res==200)
         {
-          window.location='/quiz/start/{{quiz.id}}';
+          window.location='/quiz/start/{{quiz.id}}/';
         }
         else
         {
@@ -55,8 +79,8 @@ $('#start').click(()=>{
     }
 });
 }); 
-var countDownDate = "{{start}}"*1000//To get international standard time
-  console.log(countDownDate)
+var countDownDate = "{{start}}"*1000//To get time in milliseconds
+var endTime="{{end}}"*1000;
 var x = setInterval(function() {
   var now = new Date().getTime();
   console.log(now);
@@ -73,5 +97,13 @@ var x = setInterval(function() {
     document.getElementById("demo").innerHTML = "Started";
     document.getElementById("start").value = "Enter";
   }
+  if(now>endTime){
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "Ended";
+    document.getElementById("start").value = "Locked";
+  }
+
 }, 1000);
+
+
 </script>

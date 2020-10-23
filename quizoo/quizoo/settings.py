@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '8ahn89dub6$ak#5c(m--#m7vqzhfhvm5h+uq05t@mx*j9n(j8*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['quizoo.pythonanywhere.com', 'localhost']
 
 
 # Application definition
@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_crontab',
+    'django_extensions',
+
 ]
 SITE_ID = 1
 
@@ -117,7 +120,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'email',
         ],
         'AUTH_PARAMS': {
-            'access_type': 'offline',
+            'access_type': 'online',
         }
     }
 }
@@ -137,8 +140,21 @@ TIME_ZONE = 'Asia/Kolkata'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
+CRONJOBS = [
+    ('*/10 * * * *', 'quizer.cron.my_scheduled_job',
+     '>> /home/aryan/Documents/quizooo/quizoo/file.log')  # Run this cron job every 10 minutes
+]
+CRONTAB_COMMAND_SUFFIX = '2>&1'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'quizer/static/')
 MEDIA_ROOT = BASE_DIR
-
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", '')
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+# Put your password here and ensure no double verification on gmail account & less secured apps allowed
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_PASSWORD", '')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
